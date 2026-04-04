@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nigeria Economic Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: white;
+}
+
+/* HEADER */
+header {
+    text-align: center;
+    padding: 30px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* NAV */
+nav {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+nav a {
+    margin: 10px;
+    text-decoration: none;
+    color: #00d4ff;
+    font-weight: bold;
+}
+
+/* SECTION */
+section {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(10px);
+}
+
+/* CARDS */
+.card {
+    padding: 15px;
+    margin: 10px 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    gap: 15px;
+}
+
+/* BUTTON */
+button {
+    padding: 10px 20px;
+    border: none;
+    background: #00d4ff;
+    color: black;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* DARK MODE TOGGLE */
+.toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 20px;
+    opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<button class="toggle" onclick="toggleMode()">Toggle Mode</button>
+
+<header>
+Nigeria Economic Reform Dashboard (2023–2026)
+</header>
+
+<nav>
+<a href="#overview">Overview</a>
+<a href="#policies">Policies</a>
+<a href="#impact">Impact</a>
+<a href="#charts">Charts</a>
+</nav>
+
+<!-- OVERVIEW -->
+<section id="overview">
+<h2>📊 Overview</h2>
+
+<div class="grid">
+<div class="card">💰 Subsidy Removed → Saved billions</div>
+<div class="card">📉 Inflation Increased</div>
+<div class="card">📈 Revenue Improved</div>
+<div class="card">⚡ Power Sector Reform Ongoing</div>
+</div>
+</section>
+
+<!-- POLICIES -->
+<section id="policies">
+<h2>📌 Key Policies</h2>
+
+<div class="card">
+<strong>Fuel Subsidy Removal:</strong><br>
+Saved ~$7–10B annually but increased fuel prices.
+</div>
+
+<div class="card">
+<strong>Forex Unification:</strong><br>
+Naira floated → improved transparency but depreciated heavily.
+</div>
+
+<div class="card">
+<strong>Tax Reforms:</strong><br>
+Government revenue doubled in some periods.
+</div>
+
+<div class="card">
+<strong>Electricity Reform:</strong><br>
+States can now set tariffs → mixed results.
+</div>
+</section>
+
+<!-- IMPACT -->
+<section id="impact">
+<h2>⚖ Economic Impact</h2>
+
+<div class="grid">
+
+<div class="card">
+<strong>Positive</strong><br>
+✔ Higher government revenue<br>
+✔ Better fiscal discipline<br>
+✔ Investor confidence improving
+</div>
+
+<div class="card">
+<strong>Negative</strong><br>
+✖ High inflation<br>
+✖ Cost of living crisis<br>
+✖ Increased poverty levels
+</div>
+
+</div>
+</section>
+
+<!-- CHARTS -->
+<section id="charts">
+<h2>📈 Economic Charts</h2>
+
+<canvas id="inflationChart"></canvas>
+<br>
+<canvas id="subsidyChart"></canvas>
+<br>
+<canvas id="povertyChart"></canvas>
+
+</section>
+
+<footer>
+Built for Analysis & Learning 🚀
+</footer>
+
+<script>
+
+/* DARK MODE */
+function toggleMode() {
+    document.body.style.background =
+    document.body.style.background === "white"
+    ? "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"
+    : "white";
+    document.body.style.color =
+    document.body.style.color === "black" ? "white" : "black";
+}
+
+/* INFLATION CHART */
+new Chart(document.getElementById('inflationChart'), {
+    type: 'line',
+    data: {
+        labels: ['2023', '2024', '2025'],
+        datasets: [{
+            label: 'Inflation (%)',
+            data: [22, 30, 28],
+            borderWidth: 2
+        }]
+    }
+});
+
+/* SUBSIDY SAVINGS */
+new Chart(document.getElementById('subsidyChart'), {
+    type: 'bar',
+    data: {
+        labels: ['2023', '2024', '2025'],
+        datasets: [{
+            label: 'Savings ($B)',
+            data: [8, 9, 10],
+        }]
+    }
+});
+
+/* POVERTY TREND */
+new Chart(document.getElementById('povertyChart'), {
+    type: 'line',
+    data: {
+        labels: ['2023', '2024', '2025'],
+        datasets: [{
+            label: 'Poverty (Millions)',
+            data: [120, 130, 135],
+            borderWidth: 2
+        }]
+    }
+});
+
+</script>
+
+</body>
+</html>

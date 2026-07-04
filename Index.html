@@ -1,233 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nigeria Economic Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nigeria Economic Dashboard</title>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<style>
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    color: white;
-}
+  <style>
+    :root{
+      --bg-dark-1: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --bg-light-1: #ffffff;
+      --text-dark: #ffffff;
+      --text-light: #111827;
+      --accent: #00d4ff;
+      --card-dark: rgba(255,255,255,0.08);
+      --card-light: rgba(0,0,0,0.06);
+      --card-strong-dark: rgba(255,255,255,0.1);
+      --card-strong-light: rgba(0,0,0,0.08);
+    }
 
-/* HEADER */
-header {
-    text-align: center;
-    padding: 30px;
-    font-size: 28px;
-    font-weight: bold;
-}
+    /* Base (dark theme) */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      background: var(--bg-dark-1);
+      color: var(--text-dark);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height: 100vh;
+    }
 
-/* NAV */
-nav {
-    text-align: center;
-    margin-bottom: 20px;
-}
+    /* Light theme */
+    body.light-theme {
+      background: var(--bg-light-1);
+      color: var(--text-light);
+    }
 
-nav a {
-    margin: 10px;
-    text-decoration: none;
-    color: #00d4ff;
-    font-weight: bold;
-}
+    /* HEADER */
+    header {
+      text-align: center;
+      padding: 30px;
+      font-size: 28px;
+      font-weight: 700;
+    }
 
-/* SECTION */
-section {
-    margin: 20px;
-    padding: 20px;
-    border-radius: 15px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-}
+    /* NAV */
+    nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-/* CARDS */
-.card {
-    padding: 15px;
-    margin: 10px 0;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-}
+    nav a {
+      margin: 10px;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 700;
+    }
 
-/* GRID */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-    gap: 15px;
-}
+    body.light-theme nav a {
+      color: #00627a;
+    }
 
-/* BUTTON */
-button {
-    padding: 10px 20px;
-    border: none;
-    background: #00d4ff;
-    color: black;
-    border-radius: 8px;
-    cursor: pointer;
-}
+    /* SECTION */
+    section {
+      margin: 20px;
+      padding: 20px;
+      border-radius: 15px;
+      background: var(--card-dark);
+      backdrop-filter: blur(6px);
+    }
 
-/* DARK MODE TOGGLE */
-.toggle {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-}
+    body.light-theme section {
+      background: var(--card-light);
+    }
 
-/* FOOTER */
-footer {
-    text-align: center;
-    padding: 20px;
-    opacity: 0.7;
-}
-</style>
+    /* CARDS */
+    .card {
+      padding: 15px;
+      margin: 10px 0;
+      background: var(--card-strong-dark);
+      border-radius: 10px;
+      color: inherit;
+    }
+
+    body.light-theme .card {
+      background: var(--card-strong-light);
+    }
+
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+      gap: 15px;
+    }
+
+    /* BUTTON */
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      background: var(--accent);
+      color: #000;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 2000;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      opacity: 0.8;
+    }
+
+    /* Chart containers for consistent sizing */
+    .chart-wrap {
+      width: 100%;
+      max-width: 900px;
+      margin: 16px auto;
+      background: transparent;
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .chart-panel {
+      height: 280px;
+      position: relative;
+    }
+
+    /* Small responsive tweaks */
+    @media (max-width:600px){
+      header { font-size: 20px; padding: 18px; }
+      .chart-panel { height: 220px; }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="toggle">
+    <button id="themeToggle" class="btn" aria-pressed="false" aria-label="Toggle light/dark theme">Switch to Light</button>
+  </div>
 
-<button class="toggle" onclick="toggleMode()">Toggle Mode</button>
+  <header>
+    Nigeria Economic Reform Dashboard (2023–2026)
+  </header>
 
-<header>
-Nigeria Economic Reform Dashboard (2023–2026)
-</header>
+  <nav role="navigation" aria-label="Main navigation">
+    <a href="#overview">Overview</a>
+    <a href="#policies">Policies</a>
+    <a href="#impact">Impact</a>
+    <a href="#charts">Charts</a>
+  </nav>
 
-<nav>
-<a href="#overview">Overview</a>
-<a href="#policies">Policies</a>
-<a href="#impact">Impact</a>
-<a href="#charts">Charts</a>
-</nav>
+  <!-- OVERVIEW -->
+  <section id="overview" aria-labelledby="overview-heading">
+    <h2 id="overview-heading">📊 Overview</h2>
 
-<!-- OVERVIEW -->
-<section id="overview">
-<h2>📊 Overview</h2>
+    <div class="grid" role="list">
+      <div class="card" role="listitem">💰 Subsidy Removed → Saved billions</div>
+      <div class="card" role="listitem">📉 Inflation Increased</div>
+      <div class="card" role="listitem">📈 Revenue Improved</div>
+      <div class="card" role="listitem">⚡ Power Sector Reform Ongoing</div>
+    </div>
+  </section>
 
-<div class="grid">
-<div class="card">💰 Subsidy Removed → Saved billions</div>
-<div class="card">📉 Inflation Increased</div>
-<div class="card">📈 Revenue Improved</div>
-<div class="card">⚡ Power Sector Reform Ongoing</div>
-</div>
-</section>
+  <!-- POLICIES -->
+  <section id="policies" aria-labelledby="policies-heading">
+    <h2 id="policies-heading">📌 Key Policies</h2>
 
-<!-- POLICIES -->
-<section id="policies">
-<h2>📌 Key Policies</h2>
+    <div class="card">
+      <strong>Fuel Subsidy Removal:</strong><br>
+      Saved ~$7–10B annually but increased fuel prices.
+    </div>
 
-<div class="card">
-<strong>Fuel Subsidy Removal:</strong><br>
-Saved ~$7–10B annually but increased fuel prices.
-</div>
+    <div class="card">
+      <strong>Forex Unification:</strong><br>
+      Naira floated → improved transparency but depreciated heavily.
+    </div>
 
-<div class="card">
-<strong>Forex Unification:</strong><br>
-Naira floated → improved transparency but depreciated heavily.
-</div>
+    <div class="card">
+      <strong>Tax Reforms:</strong><br>
+      Government revenue doubled in some periods.
+    </div>
 
-<div class="card">
-<strong>Tax Reforms:</strong><br>
-Government revenue doubled in some periods.
-</div>
+    <div class="card">
+      <strong>Electricity Reform:</strong><br>
+      States can now set tariffs → mixed results.
+    </div>
+  </section>
 
-<div class="card">
-<strong>Electricity Reform:</strong><br>
-States can now set tariffs → mixed results.
-</div>
-</section>
+  <!-- IMPACT -->
+  <section id="impact" aria-labelledby="impact-heading">
+    <h2 id="impact-heading">⚖ Economic Impact</h2>
 
-<!-- IMPACT -->
-<section id="impact">
-<h2>⚖ Economic Impact</h2>
+    <div class="grid">
+      <div class="card">
+        <strong>Positive</strong><br>
+        ✔ Higher government revenue<br>
+        ✔ Better fiscal discipline<br>
+        ✔ Investor confidence improving
+      </div>
 
-<div class="grid">
+      <div class="card">
+        <strong>Negative</strong><br>
+        ✖ High inflation<br>
+        ✖ Cost of living crisis<br>
+        ✖ Increased poverty levels
+      </div>
+    </div>
+  </section>
 
-<div class="card">
-<strong>Positive</strong><br>
-✔ Higher government revenue<br>
-✔ Better fiscal discipline<br>
-✔ Investor confidence improving
-</div>
+  <!-- CHARTS -->
+  <section id="charts" aria-labelledby="charts-heading">
+    <h2 id="charts-heading">📈 Economic Charts</h2>
 
-<div class="card">
-<strong>Negative</strong><br>
-✖ High inflation<br>
-✖ Cost of living crisis<br>
-✖ Increased poverty levels
-</div>
+    <div class="chart-wrap">
+      <div class="chart-panel">
+        <canvas id="inflationChart" role="img" aria-label="Inflation chart"></canvas>
+      </div>
+    </div>
 
-</div>
-</section>
+    <div class="chart-wrap">
+      <div class="chart-panel">
+        <canvas id="subsidyChart" role="img" aria-label="Subsidy savings chart"></canvas>
+      </div>
+    </div>
 
-<!-- CHARTS -->
-<section id="charts">
-<h2>📈 Economic Charts</h2>
+    <div class="chart-wrap">
+      <div class="chart-panel">
+        <canvas id="povertyChart" role="img" aria-label="Poverty trend chart"></canvas>
+      </div>
+    </div>
+  </section>
 
-<canvas id="inflationChart"></canvas>
-<br>
-<canvas id="subsidyChart"></canvas>
-<br>
-<canvas id="povertyChart"></canvas>
+  <footer>
+    Built for Analysis & Learning 🚀
+  </footer>
 
-</section>
-
-<footer>
-Built for Analysis & Learning 🚀
-</footer>
-
-<script>
-
-/* DARK MODE */
-function toggleMode() {
-    document.body.style.background =
-    document.body.style.background === "white"
-    ? "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"
-    : "white";
-    document.body.style.color =
-    document.body.style.color === "black" ? "white" : "black";
-}
-
-/* INFLATION CHART */
-new Chart(document.getElementById('inflationChart'), {
-    type: 'line',
-    data: {
-        labels: ['2023', '2024', '2025'],
-        datasets: [{
-            label: 'Inflation (%)',
-            data: [22, 30, 28],
-            borderWidth: 2
-        }]
+  <script>
+    /* THEME TOGGLE: uses a class so CSS handles appearance */
+    const themeBtn = document.getElementById('themeToggle');
+    function updateToggleUI(isLight){
+      themeBtn.textContent = isLight ? 'Switch to Dark' : 'Switch to Light';
+      themeBtn.setAttribute('aria-pressed', String(isLight));
     }
-});
 
-/* SUBSIDY SAVINGS */
-new Chart(document.getElementById('subsidyChart'), {
-    type: 'bar',
-    data: {
-        labels: ['2023', '2024', '2025'],
-        datasets: [{
-            label: 'Savings ($B)',
-            data: [8, 9, 10],
-        }]
+    function toggleMode(){
+      const isLight = document.body.classList.toggle('light-theme');
+      updateToggleUI(isLight);
+      // Persist preference
+      try { localStorage.setItem('tinubu-theme-light', isLight ? '1' : '0'); } catch(e){}
     }
-});
 
-/* POVERTY TREND */
-new Chart(document.getElementById('povertyChart'), {
-    type: 'line',
-    data: {
-        labels: ['2023', '2024', '2025'],
-        datasets: [{
-            label: 'Poverty (Millions)',
-            data: [120, 130, 135],
-            borderWidth: 2
-        }]
+    // Initialize theme from localStorage or prefer dark
+    (function(){
+      try {
+        const stored = localStorage.getItem('tinubu-theme-light');
+        if (stored === '1') {
+          document.body.classList.add('light-theme');
+          updateToggleUI(true);
+        } else {
+          updateToggleUI(false);
+        }
+      } catch (e) {
+        updateToggleUI(false);
+      }
+    })();
+
+    themeBtn.addEventListener('click', toggleMode);
+
+    /* CHART HELPERS */
+    function createLineChart(canvasId, labels, data, label, color){
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label,
+            data,
+            borderColor: color,
+            backgroundColor: color + '33', // translucent fill
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: color
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true },
+            tooltip: { mode: 'index', intersect: false }
+          },
+          scales: {
+            x: {
+              ticks: { color: getComputedStyle(document.body).color },
+              grid: { display: false }
+            },
+            y: {
+              beginAtZero: false,
+              ticks: { color: getComputedStyle(document.body).color },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      });
     }
-});
 
-</script>
+    function createBarChart(canvasId, labels, data, label, color){
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      return new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label,
+            data,
+            backgroundColor: labels.map(()=> color),
+            borderColor: labels.map(()=> color),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: true } },
+          scales: {
+            x: { ticks: { color: getComputedStyle(document.body).color } },
+            y: {
+              beginAtZero: true,
+              ticks: { color: getComputedStyle(document.body).color },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      });
+    }
 
+    /* Data (you can update these arrays with real values) */
+    const years = ['2023', '2024', '2025'];
+
+    // Inflation (%) — example values
+    createLineChart('inflationChart', years, [22, 30, 28], 'Inflation (%)', '#ff7f50');
+
+    // Subsidy savings ($B)
+    createBarChart('subsidyChart', years, [8, 9, 10], 'Savings ($B)', '#00d4ff');
+
+    // Poverty (Millions)
+    createLineChart('povertyChart', years, [120, 130, 135], 'Poverty (Millions)', '#9b59b6');
+
+    // Optional: redraw charts when theme changes so tick colors update correctly
+    document.querySelector('#themeToggle').addEventListener('click', () => {
+      // Small timeout to allow class change and computedStyle update
+      setTimeout(() => Chart.helpers.each(Chart.instances, (chart) => chart.update()), 100);
+    });
+  </script>
 </body>
 </html>
